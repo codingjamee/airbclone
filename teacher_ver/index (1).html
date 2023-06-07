@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>interative web</title>
     <link rel="stylesheet" href="./index.css" />
+    <title>Interactive Web</title>
   </head>
+
   <body>
     <div class="cursor">
       <div class="cursor__default">
-        <span class="cursor__default__inner"> </span>
+        <span class="cursor__default__inner"></span>
       </div>
       <div class="cursor__trace">
         <span class="cursor__trace__inner"></span>
@@ -21,6 +22,7 @@
         <span class="preloader__btn_hold">Hold</span>
       </button>
     </section>
+
     <section class="header hidden-area">
       <span class="circle" id="circle-1"></span>
       <span class="circle" id="circle-2"></span>
@@ -49,7 +51,7 @@
         class="cube__image"
       />
       <h1 class="header__title">
-        <div>Last Art</div>
+        <div>LAST ART</div>
         <div>PROJECTS</div>
       </h1>
     </section>
@@ -82,25 +84,27 @@
       </div>
     </section>
   </body>
+
   <script>
     document.addEventListener("mousemove", (e) => {
       const cursorDefaultInner = document.querySelector(
         ".cursor__default__inner"
       );
+      const cursorTraceInner = document.querySelector(".cursor__trace__inner");
+
       cursorDefaultInner.style.top = e.clientY + "px";
       cursorDefaultInner.style.left = e.clientX + "px";
 
-      const cursorDefaultTrace = document.querySelector(
-        ".cursor__trace__inner"
-      );
-      cursorDefaultTrace.style.top = e.clientY + "px";
-      cursorDefaultTrace.style.left = e.clientX + "px";
+      cursorTraceInner.style.top = e.clientY + "px";
+      cursorTraceInner.style.left = e.clientX + "px";
     });
 
     const cursor = document.querySelector(".cursor");
+
     document.addEventListener("mousedown", () => {
       cursor.classList.add("cursor--active");
     });
+
     document.addEventListener("mouseup", () => {
       cursor.classList.remove("cursor--active");
     });
@@ -109,6 +113,7 @@
       let ripple = document.createElement("span");
 
       ripple.classList.add("ripple");
+
       cursor.appendChild(ripple);
 
       ripple.style.top = e.clientY - ripple.clientHeight / 2 + "px";
@@ -124,7 +129,6 @@
     });
 
     const preloaderBtn = document.querySelector(".preloader__btn");
-    const preloaderBtnHold = document.querySelector(".preloader__btn_hold");
 
     let intervalId = null;
     let scale = 1;
@@ -133,8 +137,10 @@
 
     function setPreloaderStyle(scale) {
       preloaderBtn.style.transform = `scale(${scale})`;
-      preloaderBtnHold.style.opacity = 1 - (scale - 1) / preloaderHideThreshold;
+      document.querySelector(".preloader__btn_hold").style.opacity =
+        1 - (scale - 1) / preloaderHideThreshold;
     }
+
     const header = document.querySelector(".header");
 
     preloaderBtn.addEventListener("mousedown", () => {
@@ -142,13 +148,15 @@
         scale += 0.175;
 
         setPreloaderStyle(scale);
-        if (scale >= 19) {
+
+        if (scale >= 1 + preloaderHideThreshold) {
           document.querySelector(".preloader").classList.add("hidden-area");
 
           const poster = document.querySelector(".poster");
 
           header.classList.remove("hidden-area");
           poster.classList.remove("hidden-area");
+
           header.classList.add("shown-area");
           poster.classList.add("shown-area");
 
@@ -162,7 +170,9 @@
 
       intervalId = setInterval(() => {
         scale -= 0.075;
+
         setPreloaderStyle(scale);
+
         if (scale <= 1) {
           clearInterval(intervalId);
         }
@@ -175,25 +185,27 @@
 
       document.querySelector(".header__title").style.transform = `translate(${
         xRelativeToHeader * -50
-      }px, ${yRelativeToHeader * 50}px)`;
+      }px, ${yRelativeToHeader * -50}px)`;
+
       document.querySelector("#circle-1").style.transform = `translate(${
-        xRelativeToHeader * -50
-      }px, ${yRelativeToHeader * 25}px)`;
+        xRelativeToHeader * -25
+      }px, ${yRelativeToHeader * -25}px)`;
       document.querySelector("#circle-2").style.transform = `translate(${
-        xRelativeToHeader * 50
-      }px)`;
+        xRelativeToHeader * 25
+      }px, ${yRelativeToHeader * 25}px)`;
+
       document.querySelector("#cube__image_1").style.transform = `translate(${
         xRelativeToHeader * -15
       }px, ${yRelativeToHeader * -15}px)`;
       document.querySelector("#cube__image_2").style.transform = `translate(${
-        xRelativeToHeader * -25
-      }px, ${yRelativeToHeader * -25}px)`;
+        xRelativeToHeader * -8
+      }px, ${yRelativeToHeader * -8}px)`;
       document.querySelector("#cube__image_3").style.transform = `translate(${
-        xRelativeToHeader * 55
-      }px, ${yRelativeToHeader * 55}px)`;
+        xRelativeToHeader * -20
+      }px, ${yRelativeToHeader * -20}px)`;
       document.querySelector("#cube__image_4").style.transform = `translate(${
-        xRelativeToHeader * 90
-      }px, ${yRelativeToHeader * 90}px)`;
+        xRelativeToHeader * 5
+      }px, ${yRelativeToHeader * 5}px)`;
     });
 
     const observer = new IntersectionObserver(
@@ -204,13 +216,29 @@
           }
         });
       },
-      {
-        threshold: 0.2,
-      }
+      { threshold: 0.2 }
     );
 
     document.querySelectorAll(".poster-image_wrapper").forEach((poster) => {
       observer.observe(poster);
+    });
+
+    const posterParallax = document.querySelector(".poster__parallax");
+
+    posterParallax.addEventListener("mousemove", (e) => {
+      const xRelativeToPosterParallax = e.clientX / posterParallax.clientWidth;
+      const yRelativeToPosterParallax = e.clientY / posterParallax.clientHeight;
+
+      document.querySelector(
+        "#poster-image_wrapper_2"
+      ).style.transform = `translate(${xRelativeToPosterParallax * -40}px, ${
+        yRelativeToPosterParallax * -40
+      }px)`;
+      document.querySelector(
+        "#poster-image_wrapper_3"
+      ).style.transform = `translate(${xRelativeToPosterParallax * 40}px, ${
+        yRelativeToPosterParallax * 40
+      }px)`;
     });
   </script>
 </html>
