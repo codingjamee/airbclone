@@ -300,6 +300,13 @@
 
     const handleSlideChange = (step) => {
       currentImage += step;
+
+      if (currentImage < 0) {
+        currentImage = sliderImages.length - 1;
+      }
+      if (currentImage >= sliderImages.length) {
+        currentImage = 0;
+      }
       sliderContentWrapper.scrollLeft = sliderImages[currentImage].offsetLeft;
     };
 
