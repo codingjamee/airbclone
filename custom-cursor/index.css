@@ -286,7 +286,7 @@ body {
   width: 20%;
 }
 
-.header_title {
+.header__title {
   position: absolute;
   top: 30vh;
   width: 100%;

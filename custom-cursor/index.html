@@ -48,7 +48,7 @@
         alt="cube image"
         class="cube__image"
       />
-      <h1 class="header_title">
+      <h1 class="header__title">
         <div>Last Art</div>
         <div>PROJECTS</div>
       </h1>
@@ -107,6 +107,7 @@
       preloaderBtn.style.transform = `scale(${scale})`;
       preloaderBtnHold.style.opacity = 1 - (scale - 1) / preloaderHideThreshold;
     }
+    const header = document.querySelector(".header");
 
     preloaderBtn.addEventListener("mousedown", () => {
       intervalId = setInterval(() => {
@@ -114,7 +115,6 @@
 
         setPreloaderStyle(scale);
         if (scale >= 19) {
-          const header = document.querySelector(".header");
           document.querySelector(".preloader").classList.add("hidden-area");
 
           header.classList.remove("hidden-area");
@@ -135,6 +135,33 @@
           clearInterval(intervalId);
         }
       }, 10);
+    });
+
+    header.addEventListener("mousemove", (e) => {
+      const xRelativeToHeader = e.clientX / header.clientWidth;
+      const yRelativeToHeader = e.clientY / header.clientHeight;
+
+      document.querySelector(".header__title").style.transform = `translate(${
+        xRelativeToHeader * -50
+      }px, ${yRelativeToHeader * 50}px)`;
+      document.querySelector("#circle-1").style.transform = `translate(${
+        xRelativeToHeader * -50
+      }px, ${yRelativeToHeader * 25}px)`;
+      document.querySelector("#circle-2").style.transform = `translate(${
+        xRelativeToHeader * 50
+      }px)`;
+      document.querySelector("#cube__image_1").style.transform = `translate(${
+        xRelativeToHeader * -15
+      }px, ${yRelativeToHeader * -15}px)`;
+      document.querySelector("#cube__image_2").style.transform = `translate(${
+        xRelativeToHeader * -25
+      }px, ${yRelativeToHeader * -25}px)`;
+      document.querySelector("#cube__image_3").style.transform = `translate(${
+        xRelativeToHeader * 55
+      }px, ${yRelativeToHeader * 55}px)`;
+      document.querySelector("#cube__image_4").style.transform = `translate(${
+        xRelativeToHeader * 90
+      }px, ${yRelativeToHeader * 90}px)`;
     });
   </script>
 </html>
