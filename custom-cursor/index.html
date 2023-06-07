@@ -39,5 +39,23 @@
     document.addEventListener("mouseup", () => {
       cursor.classList.remove("cursor--active");
     });
+
+    function createRipple(e) {
+      let ripple = document.createElement("span");
+
+      ripple.classList.add("ripple");
+      cursor.appendChild(ripple);
+
+      ripple.style.top = e.clientY - ripple.clientHeight / 2 + "px";
+      ripple.style.left = e.clientX - ripple.clientWidth / 2 + "px";
+
+      ripple.addEventListener("animationend", () => {
+        cursor.removeChild(ripple);
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      createRipple(e);
+    });
   </script>
 </html>
