@@ -266,8 +266,15 @@ body {
   position: relative;
   width: 300px;
 }
+
 #slider-content-wrapper {
   overflow-x: scroll;
+  scroll-snap-type: X mandatory;
+  scroll-behavior: smooth;
+}
+
+#slider-content-wrapper::-webkit-scrollbar {
+  width: 0;
 }
 
 #slider-content {
@@ -275,8 +282,9 @@ body {
 }
 
 .slider-image {
-  width: 300px;
-  height: 466px;
+  width: 301px;
+  height: 468px;
+  scroll-snap-align: center;
 }
 
 .slider-button {
@@ -287,8 +295,17 @@ body {
 
 #left-button {
   left: 10px;
+  cursor: pointer;
 }
 
 #right-button {
   right: 10px;
+  cursor: pointer;
+}
+
+#slider-index {
+  position: absolute;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
 }
