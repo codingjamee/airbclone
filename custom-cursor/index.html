@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>interative web</title>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <div class="cursor">
+      <div class="cursor__default">
+        <span class="cursor__default__inner"> </span>
+      </div>
+      <div class="cursor__trace">
+        <span class="cursor__trace__inner"></span>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.addEventListener("mousemove", (e) => {
+      const cursorDefaultInner = document.querySelector(
+        ".cursor__default__inner"
+      );
+      cursorDefaultInner.style.top = e.clientY + "px";
+      cursorDefaultInner.style.left = e.clientX + "px";
+
+      const cursorDefaultTrace = document.querySelector(
+        ".cursor__trace__inner"
+      );
+      cursorDefaultTrace.style.top = e.clientY + "px";
+      cursorDefaultTrace.style.left = e.clientX + "px";
+    });
+
+    const cursor = document.querySelector(".cursor");
+    document.addEventListener("mousedown", () => {
+      cursor.classList.add("cursor--active");
+    });
+    document.addEventListener("mouseup", () => {
+      cursor.classList.remove("cursor--active");
+    });
+  </script>
+</html>
