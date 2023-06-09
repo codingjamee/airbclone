@@ -33,11 +33,11 @@ class Canvas extends CanvasOption {
   createTail() {
     const x = randomNumBetween(this.canvasWidth * 0.2, this.canvasWidth * 0.8);
     const vy = this.canvasHeight * randomNumBetween(0.01, 0.015) * -1;
-    const color = "255, 255, 255";
-    this.tails.push(new Tail(x, vy, color));
+    const colorDeg = randomNumBetween(0, 360);
+    this.tails.push(new Tail(x, vy, colorDeg));
   }
 
-  createParticles(x, y, color) {
+  createParticles(x, y, colorDeg) {
     const PARTICLE_NUM = 1000;
 
     for (let i = 0; i < PARTICLE_NUM; i++) {
@@ -50,7 +50,8 @@ class Canvas extends CanvasOption {
       const vx = r * Math.cos(angle);
       const vy = r * Math.sin(angle);
       const opacity = randomNumBetween(0.1, 1);
-      this.particles.push(new Particle(x, y, vx, vy, opacity));
+      const _colorDeg = randomNumBetween(-20, 20) + colorDeg;
+      this.particles.push(new Particle(x, y, vx, vy, opacity, _colorDeg));
     }
   }
 
@@ -70,6 +71,11 @@ class Canvas extends CanvasOption {
       this.ctx.fillStyle = this.bgColor + "10";
       this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
+      this.ctx.fillStyle = `rgba(255, 255, 255, ${
+        this.particles.length / 400000
+      })`;
+      this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
       //tail을 적은 횟수로 만들어주기 위해
       if (Math.random() < 0.03) this.createTail();
 
@@ -78,10 +84,22 @@ class Canvas extends CanvasOption {
         tail.update();
         tail.draw();
 
+        //tail그릴때 i개씩 만들어주기
+        //i값은 tail.vy값에 비례하여 만들어주고
+        //tail.vy값이 마이너스이므로 마이너스를 곱하고 0.5만큼 곱해 반정도만 해주고
+        //정수값이어야 하므로 Math.round를 함
+        for (let i = 0; i < Math.round(-tail.vy * 0.5); i++) {
+          const vx = randomNumBetween(-5, 5) * 0.05;
+          const vy = randomNumBetween(-5, 5) * 0.05;
+          const opacity = Math.min(-tail.vy, 0.5);
+          this.sparks.push(
+            new Spark(tail.x, tail.y, vx, vy, opacity, tail.colorDeg)
+          );
+        }
         //tail이 다 올라가면 없애주기
         if (tail.vy > -0.7) {
           this.tails.splice(index, 1);
-          this.createParticles(tail.x, tail.y, tail.color);
+          this.createParticles(tail.x, tail.y, tail.colorDeg);
         }
       });
 
@@ -90,9 +108,9 @@ class Canvas extends CanvasOption {
         particle.update();
         particle.draw();
 
-        //particles를 그릴 떄 같이 해당 지점에 spark를 생성
+        //particles를 그릴 떄 같이 해당 지점에 spark를 생성(불꽃 잔상)
         if (Math.random() < 0.1) {
-          this.sparks.push(new Spark(particle.x, particle.y, 0.3));
+          this.sparks.push(new Spark(particle.x, particle.y, 0, 0, 0.3, 45));
         }
 
         //particle이 완전 투명해지면 없애주기
