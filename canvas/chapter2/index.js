@@ -1,8 +1,16 @@
+import CanvasOption from "./js/CanvasOption.js";
+import Particle from "./js/Particle.js";
+import Tail from "./js/Tail.js";
+import { hypotenuse, randomNumBetween } from "./js/utils.js";
+
 let canvasWidth, canvasHeight;
 
 class Canvas extends CanvasOption {
   constructor() {
     super();
+
+    this.tails = [];
+    this.particles = [];
   }
   //canvas초기화
   init() {
@@ -15,6 +23,32 @@ class Canvas extends CanvasOption {
     this.canvas.style.height = this.canvasHeight + "px";
 
     this.ctx.scale(this.dpr, this.dpr);
+    console.log(this.dpr);
+    this.createParticles();
+  }
+
+  createTail() {
+    const x = randomNumBetween(this.canvasWidth * 0.2, this.canvasWidth * 0.8);
+    const vy = this.canvasHeight * randomNumBetween(0.01, 0.015) * -1;
+    const color = "255, 255, 255";
+    this.tails.push(new Tail(x, vy, color));
+  }
+
+  createParticles(x, y, color) {
+    const PARTICLE_NUM = 1000;
+
+    for (let i = 0; i < PARTICLE_NUM; i++) {
+      //innerHeight와 innerWidth값을 토대로 화면이 작아져도 그것에 맞게
+      const r =
+        randomNumBetween(2, 70) * hypotenuse(innerWidth, innerHeight) * 0.0001; //자연스럽게
+      // console.log(hypotenuse(innerWidth, innerHeight));
+      const angle = (Math.PI / 180) * randomNumBetween(0, 360);
+
+      const vx = r * Math.cos(angle);
+      const vy = r * Math.sin(angle);
+      const opacity = randomNumBetween(0.1, 1);
+      this.particles.push(new Particle(x, y, vx, vy, opacity));
+    }
   }
 
   //fps작업
@@ -27,7 +61,37 @@ class Canvas extends CanvasOption {
       delta = now - then;
       if (delta < this.interval) return;
 
-      this.ctx.fillRect(100, 100, 200, 200);
+      //this.bgColor로 fill을 해서 전체화면을 그려줌(지워주는 효과)
+      //bgColor에 숫자를 붙이면 #00000030 알파값 transparency값
+      //여러번 칠해줘야 화면이 검정색이 되므로 꼬리를 남긴것같은 효과
+      this.ctx.fillStyle = this.bgColor + "10";
+      this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+      //tail을 적은 횟수로 만들어주기 위해
+      if (Math.random() < 0.03) this.createTail();
+
+      //tails배열에 담긴 tail을 업데이트 후 그려주기
+      this.tails.forEach((tail, index) => {
+        tail.update();
+        tail.draw();
+
+        //tail이 다 올라가면 없애주기
+        if (tail.vy > -0.7) {
+          this.tails.splice(index, 1);
+          this.createParticles(tail.x, tail.y, tail.color);
+        }
+      });
+
+      //particles의 배열에 담긴 particles를 업데이트후 그려주기
+      this.particles.forEach((particle, index) => {
+        particle.update();
+        particle.draw();
+
+        //particle이 완전 투명해지면 없애주기
+        if (particle.opacity < 0) {
+          this.particles.splice(index, 1);
+        }
+      });
 
       then = now - (delta % this.interval);
     };
