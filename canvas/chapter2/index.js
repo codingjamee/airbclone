@@ -1,6 +1,8 @@
 import CanvasOption from "./js/CanvasOption.js";
 import Particle from "./js/Particle.js";
 import Tail from "./js/Tail.js";
+import Spark from "./js/Spark.js";
+
 import { hypotenuse, randomNumBetween } from "./js/utils.js";
 
 let canvasWidth, canvasHeight;
@@ -11,6 +13,7 @@ class Canvas extends CanvasOption {
 
     this.tails = [];
     this.particles = [];
+    this.sparks = [];
   }
   //canvas초기화
   init() {
@@ -87,6 +90,11 @@ class Canvas extends CanvasOption {
         particle.update();
         particle.draw();
 
+        //particles를 그릴 떄 같이 해당 지점에 spark를 생성
+        if (Math.random() < 0.1) {
+          this.sparks.push(new Spark(particle.x, particle.y, 0.3));
+        }
+
         //particle이 완전 투명해지면 없애주기
         if (particle.opacity < 0) {
           this.particles.splice(index, 1);
@@ -94,6 +102,15 @@ class Canvas extends CanvasOption {
       });
 
       then = now - (delta % this.interval);
+
+      this.sparks.forEach((spark, index) => {
+        spark.update();
+        spark.draw();
+
+        if (spark.opacity < 0) {
+          this.sparks.splice(index, 1);
+        }
+      });
     };
     requestAnimationFrame(frame);
   }
