@@ -36,11 +36,13 @@ function render() {
 
   const frame = () => {
     requestAnimationFrame(frame);
+    now = Date.now();
     delta = now - then;
     if (delta < interval) return;
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
+    // opacity가 0이하인 경우 없어지는 배열때문에 반짝이는 효과없애기
     for (let i = particles.length - 1; i >= 0; i--) {
       particles[i].update();
       particles[i].draw(ctx);
