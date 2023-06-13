@@ -1,4 +1,5 @@
 import Particle from "./js/Particle.js";
+import { randomNumBetween } from "./js/utils.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
@@ -8,10 +9,11 @@ const dpr = window.devicePixelRatio > 1 ? 2 : 1;
 
 const fps = 60;
 const interval = 1000 / fps;
-const particles = [];
 
 let canvasWidth;
 let canvasHeight;
+
+const particles = [];
 
 const init = () => {
   canvasWidth = innerWidth;
@@ -28,23 +30,16 @@ const init = () => {
   ctx.scale(dpr, dpr);
 };
 
-const createRing = () => {
-  const PARTICLE_NUM = 10;
-  for (let i = 0; i < PARTICLE_NUM; i++) {
-    particles.push(new Particle());
+const confetti = ({ x, y, count, deg, colors, shapes, spread }) => {
+  for (let i = 0; i < count; i++) {
+    particles.push(new Particle(x, y, deg, colors, shapes, spread));
   }
 };
 
 const render = () => {
   let then = Date.now();
   let now, delta;
-
-  const x = innerWidth / 2;
-  let y = innerHeight / 2;
-  let widthAlpha = 0;
-  const width = 50;
-  const height = 50;
-  let deg = 0.1;
+  let deg = 0;
 
   const frame = () => {
     requestAnimationFrame(frame);
@@ -53,29 +48,46 @@ const render = () => {
     if (delta < interval) return;
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    widthAlpha += 0.1;
-    deg += 0.1;
-    y += 1;
-    // console.log("requestAnimation");
-
-    ctx.translate(x + width, y + height);
-    ctx.rotate(deg);
-    ctx.translate(-x - width, -y - height);
-
-    ctx.fillStyle = "red";
-    ctx.fillRect(
-      x,
-      y,
-      width * Math.cos(widthAlpha),
-      height * Math.sin(widthAlpha)
-    );
-
     particles.forEach((particle) => {
       particle.draw(ctx);
     });
 
     ctx.resetTransform();
 
+    deg += randomNumBetween(-1, 1);
+    confetti({
+      x: 0.5,
+      y: 0.5,
+      count: 5,
+      deg: 225 + deg,
+      // colors: ["#FF0000"],
+      spread: 1,
+    });
+    confetti({
+      x: 0.5,
+      y: 0.5,
+      count: 5,
+      deg: 90 + deg,
+      // colors: ["#FF0000"],
+      spread: 1,
+    });
+    confetti({
+      x: 0.5,
+      y: 0.5,
+      count: 5,
+      deg: 315 + deg,
+      // colors: ["#FF0000"],
+      spread: 1,
+    });
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      particles[i].update();
+      particles[i].draw(ctx);
+      if (particles[i].opacity < 0) particles.splice(i, 1);
+      if (particles[i].y > canvasHeight) particles.splice(i, 1);
+    }
+
+    console.log(particles.length);
     then = now - (delta % interval);
   };
   requestAnimationFrame(frame);
@@ -91,5 +103,12 @@ window.addEventListener("resize", () => {
 });
 
 window.addEventListener("click", () => {
-  createRing();
+  confetti({
+    x: 0,
+    y: 0.5,
+    count: 10,
+    deg: -50,
+    // colors: ["#FF0000"],
+    spread: 1,
+  });
 });
