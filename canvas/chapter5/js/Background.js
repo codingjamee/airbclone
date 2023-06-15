@@ -4,7 +4,7 @@ export default class Background {
   constructor(config) {
     this.img = config.img;
     this.height = App.height;
-    this.width = (App.height * this.img.width) / this.img.height;
+    this.width = this.height * (this.img.width / this.img.height);
     this.leftPos = { x: 0, y: 0 };
     this.rightPos = { x: this.width - 4, y: 0 };
     this.speed = config.speed;

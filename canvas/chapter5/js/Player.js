@@ -21,15 +21,15 @@ export default class Player {
     this.frameX = 0;
 
     this.vy = -12;
-    this.gravity = 0.25;
+    this.gravity = 0.22;
     App.canvas.addEventListener("click", () => {
       this.vy += -5;
     });
   }
   update() {
-    if (++this.counter % 2 === 0) {
-      this.frameX = ++this.frameX % 15;
-    }
+    // if (++this.counter % 2 === 0) {
+    this.frameX = ++this.frameX % 15;
+    // }
     // if (this.frameX === 15) this.frameX = 0;
     this.vy += this.gravity;
     this.y += this.vy;
@@ -47,6 +47,6 @@ export default class Player {
       this.width,
       this.height
     );
-    this.boundingBox.draw();
+    // this.boundingBox.draw();
   }
 }

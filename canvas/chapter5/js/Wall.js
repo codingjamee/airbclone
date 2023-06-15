@@ -18,7 +18,7 @@ export default class Wall {
     }
     this.width = App.height * this.sizeX;
     this.height = App.height;
-    this.gapY = randomNumBetween(App.height * 0.3, App.height * 0.5);
+    this.gapY = randomNumBetween(App.height * 0.3, App.height * 0.65);
     this.x = App.width;
 
     this.y1 = -this.height + randomNumBetween(30, App.height - this.gapY - 60);

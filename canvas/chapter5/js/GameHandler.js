@@ -69,8 +69,8 @@ export default class GameHandler {
   }
 
   showFinishScreen() {
-    this.distanceText.innerText = Math.floor(this.app.score.distCount) + "m";
-    this.coinText.innerText = this.app.score.coinCount + " coin";
+    this.distanceText.innerText = Math.floor(this.app.score.distCount) + "미터";
+    this.coinText.innerText = this.app.score.coinCount + " 코인";
     gsap.fromTo(
       this.finishScreen,
       { opacity: 0 },

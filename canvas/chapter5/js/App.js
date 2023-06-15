@@ -81,7 +81,7 @@ export default class App {
           });
           this.walls.push(newWall);
 
-          if (Math.random() < 0.5) {
+          if (Math.random() < 1) {
             const x = newWall.x + newWall.width / 2;
             const y = newWall.y2 - newWall.gapY / 2;
             this.coins.push(new Coin(x, y, newWall.vx));
