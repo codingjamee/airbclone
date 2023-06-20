@@ -9,8 +9,9 @@ export default class Dot {
     this.friction = 0.97;
 
     this.pinned = false;
+    this.mass = 1;
   }
-  update() {
+  update(mouse) {
     if (this.pinned) return;
     let vel = Vector.sub(this.pos, this.oldPos);
     this.oldPos.setXY(this.pos.x, this.pos.y);
@@ -20,6 +21,20 @@ export default class Dot {
 
     this.pos.add(vel);
     // console.log(this.pos);
+
+    let { x: dx, x: dy } = Vector.sub(mouse.pos, this.pos);
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist > mouse.radius) return;
+    // console.log(mouse.radius);
+
+    const direction = new Vector(dx / dist, dy / dist); //방향벡터
+    const force = (mouse.radius - dist) / mouse.radius; //마우스 힘
+
+    if (force > 0.3) this.pos.setXY(mouse.pos.x, mouse.pos.y);
+    else this.pos.add(direction.mult(force).mult(3));
+
+    console.log(force);
   }
   draw(ctx) {
     ctx.fillStyle = "#000";

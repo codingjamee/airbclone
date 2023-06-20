@@ -5,6 +5,8 @@ export default class Stick {
 
     this.length = this.startPoint.pos.dist(this.endPoint.pos);
     console.log(this.length);
+
+    this.tension = 1;
   }
   update() {
     const dx = this.endPoint.pos.x - this.startPoint.pos.x;
@@ -12,16 +14,20 @@ export default class Stick {
     const dist = Math.sqrt(dx * dx + dy * dy);
 
     const diff = (dist - this.length) / dist;
-    const offsetX = diff * dx;
-    const offsetY = diff * dy;
+    const offsetX = diff * dx * this.tension;
+    const offsetY = diff * dy * this.tension;
+
+    const m = this.startPoint.mass + this.endPoint.mass;
+    const m1 = this.endPoint.mass / m;
+    const m2 = this.endPoint.mass / m;
 
     if (!this.startPoint.pinned) {
-      this.startPoint.pos.x += offsetX * 0.5;
-      this.startPoint.pos.y += offsetY * 0.5;
+      this.startPoint.pos.x += offsetX * m1;
+      this.startPoint.pos.y += offsetY * m1;
     }
     if (!this.endPoint.pinned) {
-      this.endPoint.pos.x -= offsetX * 0.5;
-      this.endPoint.pos.y -= offsetY * 0.5;
+      this.endPoint.pos.x -= offsetX * m2;
+      this.endPoint.pos.y -= offsetY * m2;
     }
   }
   draw(ctx) {

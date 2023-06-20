@@ -1,4 +1,5 @@
 import Dot from "./Dot.js";
+import Mouse from "./Mouse.js";
 import Stick from "./Stick.js";
 
 export default class App {
@@ -11,6 +12,8 @@ export default class App {
     this.ctx = this.canvas.getContext("2d");
 
     this.resize();
+
+    this.mouse = new Mouse(this.canvas);
 
     window.addEventListener("resize", this.resize.bind(this));
     this.dots = [
@@ -54,11 +57,16 @@ export default class App {
       this.ctx.clearRect(0, 0, App.width, App.height);
 
       this.dots.forEach((dot) => {
-        dot.update();
-        dot.draw(this.ctx);
+        dot.update(this.mouse);
       });
       this.sticks.forEach((stick) => {
         stick.update();
+      });
+
+      this.dots.forEach((dot) => {
+        dot.draw(this.ctx);
+      });
+      this.sticks.forEach((stick) => {
         stick.draw(this.ctx);
       });
     };
