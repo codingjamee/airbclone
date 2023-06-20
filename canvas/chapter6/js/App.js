@@ -1,5 +1,6 @@
 import Dot from "./Dot.js";
 import Mouse from "./Mouse.js";
+import Rope from "./Rope.js";
 import Stick from "./Stick.js";
 
 export default class App {
@@ -14,6 +15,14 @@ export default class App {
     this.resize();
 
     this.mouse = new Mouse(this.canvas);
+
+    this.ropes = [];
+    const rope_1 = new Rope({
+      x: 400,
+      y: 100,
+    });
+    rope_1.pin(0);
+    this.ropes.push(rope_1);
 
     window.addEventListener("resize", this.resize.bind(this));
     this.dots = [
@@ -56,18 +65,9 @@ export default class App {
 
       this.ctx.clearRect(0, 0, App.width, App.height);
 
-      this.dots.forEach((dot) => {
-        dot.update(this.mouse);
-      });
-      this.sticks.forEach((stick) => {
-        stick.update();
-      });
-
-      this.dots.forEach((dot) => {
-        dot.draw(this.ctx);
-      });
-      this.sticks.forEach((stick) => {
-        stick.draw(this.ctx);
+      this.ropes.forEach((rope) => {
+        rope.update(this.mouse);
+        rope.draw(this.ctx);
       });
     };
     requestAnimationFrame(frame);

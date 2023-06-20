@@ -19,20 +19,21 @@ export default class Dot {
     vel.mult(this.friction);
     vel.add(this.gravity);
 
-    this.pos.add(vel);
     // console.log(this.pos);
 
     let { x: dx, x: dy } = Vector.sub(mouse.pos, this.pos);
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist > mouse.radius) return;
     // console.log(mouse.radius);
 
     const direction = new Vector(dx / dist, dy / dist); //방향벡터
-    const force = (mouse.radius - dist) / mouse.radius; //마우스 힘
+    const force = Math.max((mouse.radius - dist) / mouse.radius, 0); //마우스 힘
 
-    if (force > 0.3) this.pos.setXY(mouse.pos.x, mouse.pos.y);
-    else this.pos.add(direction.mult(force).mult(3));
+    if (force > 0.6) this.pos.setXY(mouse.pos.x, mouse.pos.y);
+    else {
+      this.pos.add(vel);
+      this.pos.add(direction.mult(force).mult(5));
+    }
 
     console.log(force);
   }

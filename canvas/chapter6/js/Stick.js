@@ -6,7 +6,7 @@ export default class Stick {
     this.length = this.startPoint.pos.dist(this.endPoint.pos);
     console.log(this.length);
 
-    this.tension = 1;
+    this.tension = 0.3;
   }
   update() {
     const dx = this.endPoint.pos.x - this.startPoint.pos.x;
