@@ -7,14 +7,19 @@ export default class Dot {
 
     this.gravity = new Vector(0, 1);
     this.friction = 0.97;
+
+    this.pinned = false;
   }
   update() {
+    if (this.pinned) return;
     let vel = Vector.sub(this.pos, this.oldPos);
     this.oldPos.setXY(this.pos.x, this.pos.y);
 
     vel.mult(this.friction);
     vel.add(this.gravity);
+
     this.pos.add(vel);
+    // console.log(this.pos);
   }
   draw(ctx) {
     ctx.fillStyle = "#000";
